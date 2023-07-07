@@ -7,9 +7,6 @@ using GpsApp;
 using Android.Widget;
 using Java.Util;
 using Java.Text;
-using System;
-using Android.Util;
-using AndroidX.Core.Content;
 using Android.Graphics;
 
 /// <summary>

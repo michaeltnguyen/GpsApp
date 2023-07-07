@@ -4,7 +4,9 @@ using Android.Content.PM;
 using Android.Locations;
 using Android.OS;
 using Android.Runtime;
+using Android.Util;
 using AndroidX.Core.App;
+using System.Threading;
 
 namespace GpsApp
 {
@@ -19,6 +21,7 @@ namespace GpsApp
     [Service(Name ="com.chessdork.gps.GpsService", ForegroundServiceType = ForegroundService.TypeLocation, Permission = Android.Manifest.Permission.AccessFineLocation)]
     public class GpsService : Service, ILocationListener
     {
+        const string HandlerThreadName = "gps_handler_thread";
         const string NotificationChannelId = "gps_notification_channel_id";
         const int NotificationId = 123;
 
@@ -33,12 +36,18 @@ namespace GpsApp
 
         private GpsDatabase _database;
 
+        // used to process location callbacks on a background thread.  In this sample, there's no I/O, but typically
+        // saving the location requires saving to disk, which we'd want to do in the background.
+        private HandlerThread _backgroundHandlerThread;
+
         public override void OnCreate()
         {
             base.OnCreate();
             _locationManager = (LocationManager) GetSystemService(LocationService);
             _notificationManager = (NotificationManager)GetSystemService(NotificationService);
             _database = GpsDatabase.Instance;
+            _backgroundHandlerThread = new HandlerThread(HandlerThreadName);
+            _backgroundHandlerThread.Start();
         }
 
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
@@ -46,7 +55,7 @@ namespace GpsApp
             StartForeground(NotificationId, CreateForegroundNotification());
 
             // request once per second
-            _locationManager.RequestLocationUpdates(LocationManager.GpsProvider, 1000, 0f, this);
+            _locationManager.RequestLocationUpdates(LocationManager.GpsProvider, 1000, 0f, this, _backgroundHandlerThread.Looper);
    
 
             IsRunning = true;
@@ -59,6 +68,7 @@ namespace GpsApp
         {
             base.OnDestroy();
             _locationManager.RemoveUpdates(this);
+            _backgroundHandlerThread.QuitSafely();
 
             IsRunning = false;
         }
@@ -91,10 +101,15 @@ namespace GpsApp
             return null;
         }
 
+
         public void OnLocationChanged(Location location)
         {
-            // Record all locations, but filter out those we don't want to display in the query.  More data = better.
-            _database.InsertLocation(location);
+            // we're on a background thread here.  If we're not, no data will show up!  (this code would not actually exist in production)
+            if (Thread.CurrentThread.IsBackground)
+            {
+                // Record all locations, but filter out those we don't want to display in the query.  More data = better.
+                _database.InsertLocation(location);
+            }
         }
 
         public void OnProviderDisabled(string provider)

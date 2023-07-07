@@ -9,8 +9,6 @@ using AndroidX.AppCompat.App;
 using AndroidX.Core.App;
 using AndroidX.Core.Content;
 using AndroidX.RecyclerView.Widget;
-using GpsApp;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,7 +16,7 @@ namespace GpsApp
 {
     /// <summary>
     /// An activity responsible for displaying Locations that were fetched from the <see cref="GpsService"/>.
-    /// It also provides UI to enable the user to start and stop that Service, request OS permissions if necessary.
+    /// It also provides UI to enable the user to start and stop that Service, requesting OS permissions if necessary.
     /// </summary>
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity, GpsDatabase.IOnChangeListener
@@ -37,6 +35,10 @@ namespace GpsApp
 
         private State _state;
 
+        // Ensure background thread callbacks can run UI code on the main thread.  Android data frameworks usually handle
+        // this for us, but because we have our custom GpsDatabase, we get to do it manually.  :(
+        private Handler _mainHandler;
+
         private GpsDatabase _database;
 
         // bound views
@@ -52,7 +54,7 @@ namespace GpsApp
             base.OnCreate(savedInstanceState);
 
             _database = GpsDatabase.Instance;
-
+            _mainHandler = new Handler(Looper.MainLooper);
             _state = new State { LocationData = new List<Location>(), IsGpsServiceRunning = GpsService.IsRunning };
 
             SetContentView(Resource.Layout.activity_main);
@@ -100,8 +102,11 @@ namespace GpsApp
 
         public void OnLocationDataChanged()
         {
-            _state.LocationData = _database.GetLocations();
-            UpdateViews();
+            _mainHandler.Post(() =>
+            {
+                _state.LocationData = _database.GetLocations();
+                UpdateViews();
+            });
         }
 
         public void ToggleGpsService()
