@@ -38,7 +38,17 @@ namespace GpsApp
         public void InsertLocation(Location ping)
         {
             _data.Add(ping);
+            PublishChangeNotifications();
+        }
 
+        public void Clear()
+        {
+            _data.Clear();
+            PublishChangeNotifications();
+        }
+
+        protected void PublishChangeNotifications()
+        {
             // Using one of the frameworks above, the change notification happens "automagically"
             foreach (var listener in _listeners)
             {
