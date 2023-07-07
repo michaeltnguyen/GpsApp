@@ -55,7 +55,6 @@ namespace GpsApp
 
             _database = GpsDatabase.Instance;
             _mainHandler = new Handler(Looper.MainLooper);
-            _state = new State { LocationData = new List<Location>(), IsGpsServiceRunning = GpsService.IsRunning };
 
             SetContentView(Resource.Layout.activity_main);
 
@@ -70,13 +69,16 @@ namespace GpsApp
             _locationRecyclerView.SetAdapter(_locationAdapter);
             _locationRecyclerView.SetLayoutManager(_locationLayoutManager);
 
-            UpdateViews();
         }
 
         protected override void OnStart()
         {
             base.OnStart();
             _database.AddListener(this);
+
+            // load data in case we missed it while stopped in the background.
+            _state = new State { LocationData = _database.GetLocations(), IsGpsServiceRunning = GpsService.IsRunning };
+            UpdateViews();
         }
 
         protected override void OnStop()
