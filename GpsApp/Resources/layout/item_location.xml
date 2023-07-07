@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/location_date_text"
+        style="@style/LocationItemCell"
+        tools:text="2021-01-01"/>
+
+    <TextView
+        android:id="@+id/location_time_text"
+        style="@style/LocationItemCell"
+        tools:text="9:30 AM"/>
+
+    <TextView
+        android:id="@+id/location_lat_text"
+        style="@style/LocationItemCell"
+        tools:text="37.4"/>
+
+     <TextView
+        android:id="@+id/location_long_text"
+        style="@style/LocationItemCell"
+        tools:text="122.0"/>
+
+     <TextView
+        android:id="@+id/location_bearing_text"
+        style="@style/LocationItemCell"
+        tools:text="36.5"/>
+
+     <TextView
+        android:id="@+id/location_speed_text"
+        style="@style/LocationItemCell"
+        tools:text="60"/>
+
+     <TextView
+        android:id="@+id/location_provider_text"
+        style="@style/LocationItemCell"
+        tools:text="GPS"/>
+</LinearLayout>
