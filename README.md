@@ -33,4 +33,6 @@ A lot of complexity in android is around handling edge cases.  Device-specific i
 - Providing a notification when permissions are denied, and taking the user to the settings app to enable that permission.  (if the user denies twice, android doesn't even show the permissions prompt anymore!)
 - Using a bound service to communicate when the gps service has actually started, so we can show a loading indicator.
 - Persist the data to disk, and eventually sync that data with a server.
+- Integration tests.  Running the GpsServer against a mocked location provider, or the Activity against some stubbed data.  This might require some C# ports of java classes.  (e.g., [ServiceTestRule](https://developer.android.com/reference/android/support/test/rule/ServiceTestRule))
+- Labeled headers on the list 🙃
 
