@@ -3,6 +3,7 @@ using Android.Content;
 using Android.Locations;
 using Android.OS;
 using Android.Runtime;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.App;
@@ -140,10 +141,11 @@ namespace GpsApp
         {
             if (!EnsurePermissionsGranted())
             {
+
                 return;
             }
 
-            StartForegroundService(new Intent(this, typeof(GpsService)));
+            ContextCompat.StartForegroundService(this, new Intent(this, typeof(GpsService)));
 
             _state.IsGpsServiceRunning = true;
             UpdateViews();
@@ -151,12 +153,23 @@ namespace GpsApp
 
         protected bool EnsurePermissionsGranted()
         {
-            var requiredPermissions = new string[]
+            var requiredPermissions = new List<string>
             {
                 Android.Manifest.Permission.AccessFineLocation,
-                Android.Manifest.Permission.ForegroundService,
-                Android.Manifest.Permission.PostNotifications
             };
+
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.P)
+            {
+                // I would've expected compat to just handle this automatically
+                requiredPermissions.Add(Android.Manifest.Permission.ForegroundService);
+            };
+
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
+            {
+                // compat is supposed to handle this one; maybe xamarin appcompat not up-to-date.
+                // https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/core/src/main/java/androidx/core/content/ContextCompat.java#598
+                requiredPermissions.Add(Android.Manifest.Permission.PostNotifications);
+            }
 
             var hasRequiredPermissions = requiredPermissions.All((permission) => ContextCompat.CheckSelfPermission(this, permission) == Android.Content.PM.Permission.Granted);
 
@@ -167,7 +180,7 @@ namespace GpsApp
 
             // we're missing some permissions, so request them
             // TODO: call ActivityCompat.ShouldShowRequestPermissionRationale and explain to the user why we need it
-            ActivityCompat.RequestPermissions(this, requiredPermissions, RequestPermissionRequestCode);
+            ActivityCompat.RequestPermissions(this, requiredPermissions.ToArray(), RequestPermissionRequestCode);
             return false;
         }
 

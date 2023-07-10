@@ -44,7 +44,7 @@ namespace GpsApp
         {
             base.OnCreate();
             _locationManager = (LocationManager) GetSystemService(LocationService);
-            _notificationManager = (NotificationManager)GetSystemService(NotificationService);
+            _notificationManager = (NotificationManager) GetSystemService(NotificationService);
             _database = GpsDatabase.Instance;
             _backgroundHandlerThread = new HandlerThread(HandlerThreadName);
             _backgroundHandlerThread.Start();

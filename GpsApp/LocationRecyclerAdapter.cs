@@ -48,6 +48,7 @@ public class LocationRecyclerAdapter : RecyclerView.Adapter
         var row = inflater.Inflate(Resource.Layout.item_location, parent, false);
         return new LocationViewHolder(row);
     }
+
     public override void OnBindViewHolder(RecyclerView.ViewHolder viewHolder, int position)
     {
         var location = _data[position];
