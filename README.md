@@ -1,6 +1,6 @@
 # GpsApp
 
-![image](https://github.com/michaeltnguyen/GpsApp/assets/14219683/8cdd6a89-ed6d-40ec-bbf1-39a51fe6ce5b)
+![Screenshot 2023-07-10 201550 PNG](https://github.com/michaeltnguyen/GpsApp/assets/14219683/4b8f5954-ccf0-42aa-b46b-2a711ac0c350)
 
 ## Overview
 This is a sample android application that demonstrates getting the user's location in a foreground service.  The key files are:
