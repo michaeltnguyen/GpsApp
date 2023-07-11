@@ -1,4 +1,4 @@
-using Android.Locations;
+﻿using GpsData;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,26 +8,26 @@ namespace GpsApp
     /// An in-memory data store for GPS pings.  In a real app, I'd use a SQLite database with the
     /// Room ORM or a ContentProvider, but this allows us to have a separate data layer without the boilerplate.
     /// </summary>
-    public class GpsDatabase 
+    public class GpsDatabase
     {
         // If the project has dependency injection, I'd specify that this is a singleton instead of doing this.
         public static readonly GpsDatabase Instance = new GpsDatabase();
 
         private readonly List<IOnChangeListener> _listeners;
 
-        // In a real app, we'd have a different model (schema) for the persisted data, with an ID, metadata, etc.
-        private readonly List<Location> _data;
+        // In a real app, we'd have a persisted model with an id, metadata, etc.
+        private readonly List<GpsLocation> _data;
 
         private GpsDatabase()
         {
             _listeners = new List<IOnChangeListener>();
-            _data = new List<Location>();
+            _data = new List<GpsLocation>();
         }
 
-        // GetPings is normally a Task<Location[]> but since we're backed by an array, we don't need to worry
+        // GetPings is normally a Task<GpsLocation[]> but since we're backed by an array, we don't need to worry
         // about doing I/O on the main thread.  Background threading is handled automatically using
         // Room / LoaderManager.
-        public List<Location> GetLocations()
+        public List<GpsLocation> GetLocations()
         {
             // Using SQLite there's more flexibility in specifying the query.  (i.e., different
             // where clauses for different screens)
@@ -35,7 +35,7 @@ namespace GpsApp
         }
 
         // This results in an unbounded Location collection; in a real app we might prune old pings once a month.
-        public void InsertLocation(Location ping)
+        public void InsertLocation(GpsLocation ping)
         {
             _data.Add(ping);
             PublishChangeNotifications();

@@ -1,15 +1,14 @@
 ﻿using Android.App;
 using Android.Content;
-using Android.Locations;
 using Android.OS;
 using Android.Runtime;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.App;
 using AndroidX.Core.App;
 using AndroidX.Core.Content;
 using AndroidX.RecyclerView.Widget;
+using GpsData;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,7 +27,7 @@ namespace GpsApp
         // we need to re-render / update the views.
         protected struct State
         {
-            public List<Location> LocationData;
+            public List<GpsLocation> LocationData;
             // better here is to have a transient loading state, since the service doesn't start and stop
             // immediately
             public bool IsGpsServiceRunning;
@@ -163,13 +162,6 @@ namespace GpsApp
                 // I would've expected compat to just handle this automatically
                 requiredPermissions.Add(Android.Manifest.Permission.ForegroundService);
             };
-
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
-            {
-                // compat is supposed to handle this one; maybe xamarin appcompat not up-to-date.
-                // https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/core/src/main/java/androidx/core/content/ContextCompat.java#598
-                requiredPermissions.Add(Android.Manifest.Permission.PostNotifications);
-            }
 
             var hasRequiredPermissions = requiredPermissions.All((permission) => ContextCompat.CheckSelfPermission(this, permission) == Android.Content.PM.Permission.Granted);
 

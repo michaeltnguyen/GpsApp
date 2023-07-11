@@ -4,8 +4,8 @@ using Android.Content.PM;
 using Android.Locations;
 using Android.OS;
 using Android.Runtime;
-using Android.Util;
 using AndroidX.Core.App;
+using GpsData;
 using System.Threading;
 
 namespace GpsApp
@@ -107,8 +107,10 @@ namespace GpsApp
             // we're on a background thread here.  If we're not, no data will show up!  (this code would not actually exist in production)
             if (Thread.CurrentThread.IsBackground)
             {
+                var convertedLocation = new GpsLocation(location.Accuracy, location.Time, location.Latitude, location.Longitude,
+                    location.Bearing, location.Speed, location.Provider);
                 // Record all locations, but filter out those we don't want to display in the query.  More data = better.
-                _database.InsertLocation(location);
+                _database.InsertLocation(convertedLocation);
             }
         }
 

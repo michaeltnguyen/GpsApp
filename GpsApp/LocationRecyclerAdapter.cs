@@ -1,4 +1,3 @@
-using Android.Locations;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using Android.Widget;
 using Java.Util;
 using Java.Text;
 using Android.Graphics;
+using GpsData;
 
 /// <summary>
 /// A RecyclerView.Adapter for displaying location information in a list.
@@ -18,7 +18,7 @@ using Android.Graphics;
 /// </summary>
 public class LocationRecyclerAdapter : RecyclerView.Adapter
 {
-    private List<Location> _data;
+    private List<GpsLocation> _data;
     private readonly DateFormat _dateFormatter;
     private readonly DateFormat _timeFormatter;
     private readonly DecimalFormat _singleDecimalFormatter;
@@ -28,7 +28,7 @@ public class LocationRecyclerAdapter : RecyclerView.Adapter
 
     public LocationRecyclerAdapter()
     {
-        _data = new List<Location>();
+        _data = new List<GpsLocation>();
         _dateFormatter = DateFormat.GetDateInstance(DateFormat.Short);
         _timeFormatter = DateFormat.GetTimeInstance(DateFormat.Short);
         _singleDecimalFormatter = new DecimalFormat("#.#");
@@ -68,7 +68,7 @@ public class LocationRecyclerAdapter : RecyclerView.Adapter
         holder.ItemView.SetBackgroundColor(position % 2 == 0 ? Color.PaleTurquoise : Color.White);
     }
 
-    public void SetData(List<Location> newData)
+    public void SetData(List<GpsLocation> newData)
     {
         // always show most-recent first
         _data = newData.OrderByDescending(l => l.Time).ToList();

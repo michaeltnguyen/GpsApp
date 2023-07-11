@@ -5,7 +5,7 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GpsApp", "GpsApp\GpsApp.csproj", "{B4EFA398-F1DB-4F5D-9377-BB71769FF1AF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GpsAppTest", "GpsAppTest\GpsAppTest.csproj", "{7B91D64F-F44A-4BCD-9771-CB018CFA0F37}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GpsData", "GpsData\GpsData.csproj", "{32BCC603-B396-4006-9854-D42EBFA17A93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +19,10 @@ Global
 		{B4EFA398-F1DB-4F5D-9377-BB71769FF1AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4EFA398-F1DB-4F5D-9377-BB71769FF1AF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B4EFA398-F1DB-4F5D-9377-BB71769FF1AF}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{7B91D64F-F44A-4BCD-9771-CB018CFA0F37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B91D64F-F44A-4BCD-9771-CB018CFA0F37}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B91D64F-F44A-4BCD-9771-CB018CFA0F37}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B91D64F-F44A-4BCD-9771-CB018CFA0F37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32BCC603-B396-4006-9854-D42EBFA17A93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32BCC603-B396-4006-9854-D42EBFA17A93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32BCC603-B396-4006-9854-D42EBFA17A93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32BCC603-B396-4006-9854-D42EBFA17A93}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
