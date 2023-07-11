@@ -5,9 +5,9 @@
 ## Overview
 This is a sample android application that demonstrates getting the user's location in a foreground service.  The key files are:
 
-- GpsDatabase: an in-memory data layer for storing and retrieving locations.  In a real app, this would be a SQLite database with much more boilerplate.  Having a separate layer allows the view (activity) and the GPS service to be decoupled from one another and run independently.  (key point: the app can continue collecting pings even when the user is not actively using the app)
-- GpsService: a foreground service that's responsible for requesting location updates and storing them in the GpsDatabase.
-- MainActivity: a view for the user to view previous locations and to start/stop the gps service.
+- GpsData/GpsDatabase: an in-memory data layer for storing and retrieving locations.  In a real app, this would be a SQLite database with much more boilerplate.  Having a separate layer allows the view (activity) and the GPS service to be decoupled from one another and run independently.  (key point: the app can continue collecting pings even when the user is not actively using the app)
+- GpsApp/GpsService: a foreground service that's responsible for requesting location updates and storing them in the GpsDatabase.
+- GpsApp/MainActivity: a view for the user to view previous locations and to start/stop the gps service.
 
 ## Requirements
 ### Get GPS points and display them in a UI
@@ -20,11 +20,11 @@ The list was built using a RecyclerView.  In retrospect, a TableLayout would lik
 
 Running in a foreground service is probably the most important part -- it ensures android will try to keep our gps service alive, even if the user is not actively using the app.
 
-The background thread is accomplished with a [HandlerThread](https://developer.android.com/reference/android/os/HandlerThread), which allows location callbacks to be easily processed in a background thread.  A more usual pattern might be to use the (Room ORM)[https://developer.android.com/training/data-storage/room/async-queries] to do async I/O or a [ContentProvider](https://developer.android.com/guide/topics/providers/content-provider-basics).  In those frameworks, the work is dispatched on the main thread, runs in a background thread, and the result is passed back to the main thread.  (so you never actually have to handle threads on your own).
+The background thread is accomplished with a [HandlerThread](https://developer.android.com/reference/android/os/HandlerThread), which allows location callbacks to be easily processed in a background thread.  A more usual pattern might be to use the [Room ORM](https://developer.android.com/training/data-storage/room/async-queries) to do async I/O or a [ContentProvider](https://developer.android.com/guide/topics/providers/content-provider-basics).  In those frameworks, the work is dispatched on the main thread, runs in a background thread, and the result is passed back to the main thread.  (so you never actually have to handle threads on your own).
 
 ### The app should work for android 4.4 to Android 10
 
-The minSdk is 19 (4.4 KitKat) and the targetSdk is the latest (33).  AppCompat was used to ensure backwards compatibility to KitKat.  The only time a version check was needed is to create the notification channel on android O+.
+The minSdk is 19 (4.4 KitKat) and the targetSdk is android Q (29).  AppCompat was used to ensure backwards compatibility to KitKat.  I tested using android L (21) and android U (34), which are the oldest and newest versions on the SDK manager.  The only time version checks were needed are to create the notification channel on android O+ and to check for foreground permission on P+.
 
 ## Improvements
 
@@ -33,6 +33,6 @@ A lot of complexity in android is around handling edge cases.  Device-specific i
 - Providing a notification when permissions are denied, and taking the user to the settings app to enable that permission.  (if the user denies twice, android doesn't even show the permissions prompt anymore!)
 - Using a bound service to communicate when the gps service has actually started, so we can show a loading indicator.
 - Persist the data to disk, and eventually sync that data with a server.
-- Integration tests.  Running the GpsServer against a mocked location provider, or the Activity against some stubbed data.  This might require some C# ports of java classes.  (e.g., [ServiceTestRule](https://developer.android.com/reference/android/support/test/rule/ServiceTestRule))
+- Integration tests.  Running the GpsServer against a mocked location provider, or the Activity against some stubbed data.  This might require some C# ports of java classes.  (e.g., [ServiceTestRule](https://developer.android.com/reference/android/support/test/rule/ServiceTestRule)).  I was unable to get any of the provided android test projects to work.  There is an opportunity here to write this ourselves and put it on nuget to help other struggling devs.
+- Dependency injection.  This is now possible in android using [AppComponentFactory](https://developer.android.com/reference/android/app/AppComponentFactory).  (I haven't done this yet, but have used [Dagger](https://developer.android.com/training/dependency-injection/dagger-android)
 - Labeled headers on the list 🙃
-
