@@ -21,7 +21,7 @@ public class LocationRecyclerAdapter : RecyclerView.Adapter
     private List<GpsLocation> _data;
     private readonly DateFormat _dateFormatter;
     private readonly DateFormat _timeFormatter;
-    private readonly DecimalFormat _singleDecimalFormatter;
+    private readonly DecimalFormat _degreesDecimalFormatter;
 
     // conversion factor from meters per second to miles per hour.
     const double SpeedConversion = 2.23694;
@@ -31,7 +31,7 @@ public class LocationRecyclerAdapter : RecyclerView.Adapter
         _data = new List<GpsLocation>();
         _dateFormatter = DateFormat.GetDateInstance(DateFormat.Short);
         _timeFormatter = DateFormat.GetTimeInstance(DateFormat.Short);
-        _singleDecimalFormatter = new DecimalFormat("#.#");
+        _degreesDecimalFormatter = new DecimalFormat("#.#°");
     }
 
     public override int ItemCount => _data.Count;
@@ -58,10 +58,11 @@ public class LocationRecyclerAdapter : RecyclerView.Adapter
 
         holder.DateTextView.Text = _dateFormatter.Format(date);
         holder.TimeTextView.Text = _timeFormatter.Format(date);
-        holder.LatTextView.Text = _singleDecimalFormatter.Format(location.Latitude);
-        holder.LongTextView.Text = _singleDecimalFormatter.Format(location.Longitude);
-        holder.BearingTextView.Text = _singleDecimalFormatter.Format(location.Bearing);
-        holder.SpeedTextView.Text = (location.Speed * SpeedConversion).ToString();
+        holder.LatTextView.Text = _degreesDecimalFormatter.Format(location.Latitude);
+        holder.LongTextView.Text = _degreesDecimalFormatter.Format(location.Longitude);
+        holder.BearingTextView.Text = _degreesDecimalFormatter.Format(location.Bearing);
+        // TODO: string asset and consider localizing speed measurement
+        holder.SpeedTextView.Text = (location.Speed * SpeedConversion).ToString() + " mph";
         holder.ProviderNameTextView.Text = location.Provider;
 
         // TODO: put in colors.xml
