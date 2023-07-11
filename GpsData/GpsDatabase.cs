@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GpsApp
+namespace GpsData
 {
     /// <summary>
     /// An in-memory data store for GPS pings.  In a real app, I'd use a SQLite database with the
